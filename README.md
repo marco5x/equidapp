@@ -15,7 +15,7 @@ Inside of your Astro project, you'll see the following folders and files:
 ```
 /
 ├── public/
-│   ├── logos/*
+│   ├── favicon.ico
 │   └── logo.webp
 │   └── robots.txt
 ├── src/
@@ -24,15 +24,13 @@ Inside of your Astro project, you'll see the following folders and files:
 │   │   └── Consumption
 |   │   └── Header
 |   │   └──
-│   ├── config/
-│   │   └── api.json
-│   └── pages/
-│       └── docs/
-│           └── astro
-│       └── tools/
-│           └── astro
-│       └── main.jsx
-|       └── 404
+│   ├── hooks/
+│   │   └── useStore.js
+│   │   └── useFetch.js
+│   └── main.jsx
+│   └── app.jsx
+│
+|── index.html
 └── package.json
 ```
 
