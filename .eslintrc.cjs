@@ -27,6 +27,7 @@ module.exports = {
     semi: "off",
     quotes: "off",
     singlequote: "off",
+    "multiline-ternary": "off",
     "react/react-in-jsx-scope": "off",
   },
 };

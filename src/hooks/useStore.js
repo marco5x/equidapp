@@ -1,79 +1,34 @@
 import { useReducer } from "react";
 
-// 1. Create a initialState
-const initialState = {
-  consumption: [
-    { id: "1", expense: "Apple MacBook Pro 17", price: 1000 },
-    { id: "2", expense: "Microsoft Surface Pro", price: 1250 },
-  ],
-  consumptionEqual: [],
-};
+const initialState = [
+  { id: "1", expense: "Apple MacBook Pro 17", price: 1000 },
+  { id: "2", expense: "Microsoft Surface Pro", price: 1250 },
+];
 
-// 2. Create a reducer
 const reducer = (state, action) => {
   // lógica del estado dentro del reducer
   // porque lo evitamos en los componentes
   const { type } = action;
 
   if (type === "ADD_CONSUMTION") {
-    return {
-      ...state,
-      consumption: [...initialState.consumption, action.payload],
-    };
-  }
-
-  if (type === "EDIT_CONSUMTION") {
-    console.log(action.payload);
-
-    return initialState.consumption.map((cons) => {
-      if (cons.id === action.payload.id) {
-        return action.payload;
-      } else {
-        return cons;
-      }
-    });
-  }
-  if (type === "DELETE_CONSUMTION") {
+    return [...state, action.payload];
+  } else if (type === "EDIT_CONSUMTION") {
+    const { id, expense, price } = action.payload;
+    const foundConsumption = state.find((consumption) => consumption.id === id);
+    if (foundConsumption) {
+      foundConsumption.expense = expense;
+      foundConsumption.price = parseInt(price);
+    }
+  } else if (type === "DELETE_CONSUMTION") {
     const id = action.payload;
-
-    return {
-      ...state,
-      consumption: [
-        ...initialState.consumption.filter(
-          (consumption) => consumption.id !== id
-        ),
-      ],
-    };
+    return [...state.filter((consumption) => consumption.id !== id)];
   }
-
-  if (type === "SET_FROM_TEXT") {
-    const loading = action.payload !== "";
-
-    return {
-      ...state,
-      loading,
-      fromText: action.payload,
-      result: "",
-    };
-  }
-
-  if (type === "SET_RESULT") {
-    return {
-      ...state,
-      loading: false,
-      result: action.payload,
-    };
-  }
-
   return state;
 };
 
 export const useStore = () => {
   // 3. usar el hook useReducer
-  const [{ consumption, consumptionEqual }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   const addConsumption = (payload) => {
     dispatch({ type: "ADD_CONSUMTION", payload });
@@ -88,8 +43,7 @@ export const useStore = () => {
   };
 
   return {
-    consumption,
-    consumptionEqual,
+    state,
     addConsumption,
     editConsumption,
     deleteConsumption,

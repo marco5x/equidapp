@@ -1,6 +1,6 @@
 import { Calulator } from "./components/calculator/calculator";
 import { Consumption } from "./components/consumption/Consumption";
-import { Header } from "./components/header/header";
+import { Header } from "./components/header/Header";
 
 export const App = () => {
   return (
