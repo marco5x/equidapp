@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
 import { useStore } from "../../hooks/useStore";
 
-export let total;
 export const Consumption = () => {
   const { state, addConsumption, editConsumption, deleteConsumption } =
     useStore();
 
   const [ids, setIds] = useState(null);
-  const [edit, setEdit] = useState(false);
   const [form, setForm] = useState(false);
   const [consumptions, setConsumptions] = useState({
     expense: "",
@@ -33,7 +31,7 @@ export const Consumption = () => {
     event.preventDefault();
     editConsumption({ id: ids, ...consumptions });
     setConsumptions(state);
-    setEdit(false);
+    setIds(null);
   };
 
   const handleChange = (event) => {
@@ -43,7 +41,10 @@ export const Consumption = () => {
     });
   };
 
-  total = Object.entries(state).reduce((acc, val) => acc + val[1].price, 0);
+  const total = Object.entries(state).reduce(
+    (acc, val) => acc + val[1].price,
+    0
+  );
 
   useEffect(() => {
     if (ids) {
@@ -89,7 +90,6 @@ export const Consumption = () => {
                     onClick={() => {
                       setIds(value.id);
                       setForm(false);
-                      setEdit(true);
                     }}
                     type="button"
                     className="text-white bg-gradient-to-br from-green-300 to-sky-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-600 font-medium rounded-lg text-sm px-3 py-2 text-center mr-2 mb-2"
@@ -122,7 +122,7 @@ export const Consumption = () => {
             </tr>
           </tfoot>
         </table>
-        {form && !edit ? (
+        {form && !ids ? (
           <form onSubmit={handleSubmit}>
             <label
               htmlFor="expense"
@@ -156,7 +156,7 @@ export const Consumption = () => {
             </button>
           </form>
         ) : null}
-        {!form && edit ? (
+        {!form && ids ? (
           <form onSubmit={handleEdit}>
             <label
               htmlFor="expense"
