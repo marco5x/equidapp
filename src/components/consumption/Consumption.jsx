@@ -30,7 +30,7 @@ export const Consumption = () => {
   const handleEdit = (event) => {
     event.preventDefault();
     editConsumption({ id: ids, ...consumptions });
-    setConsumptions(state);
+    setConsumptions(state.consumptions);
     setIds(null);
   };
 
@@ -41,14 +41,14 @@ export const Consumption = () => {
     });
   };
 
-  const total = Object.entries(state).reduce(
+  const total = Object.entries(state.consumptions).reduce(
     (acc, val) => acc + val[1].price,
     0
   );
 
   useEffect(() => {
     if (ids) {
-      setConsumptions(state.find((cons) => cons.id === ids));
+      setConsumptions(state.consumptions.find((cons) => cons.id === ids));
     }
   }, [ids, state]);
 
@@ -73,7 +73,7 @@ export const Consumption = () => {
             </tr>
           </thead>
           <tbody>
-            {state.map((value) => (
+            {state.consumptions.map((value) => (
               <tr
                 key={value.id}
                 className="bg-blue-500 border-b border-blue-400"
