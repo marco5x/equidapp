@@ -1,9 +1,22 @@
+import { useState } from "react";
 import { useStore } from "../../hooks/useStore";
 
 export const Calulator = () => {
   const { state } = useStore();
-
   const tot = Object.entries(state).reduce((acc, val) => acc + val[1].price, 0);
+  const [name, setName] = useState("");
+  const [income, setIncome] = useState(70);
+  const incomes = income * 3;
+  const part = Math.round((income / incomes) * 100);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const forms = event.target;
+    const formData = new FormData(forms);
+    const user = formData.get("name");
+    setName(user);
+    forms.reset();
+  };
 
   return (
     <div className="">
@@ -13,7 +26,7 @@ export const Calulator = () => {
           <thead className="text-xs text-white uppercase bg-blue-600 dark:text-white">
             <tr>
               <th scope="col" className="px-6 py-3">
-                User
+                Usuario
               </th>
               <th scope="col" className="px-6 py-3">
                 $ T. Cambio
@@ -33,56 +46,46 @@ export const Calulator = () => {
             </tr>
           </thead>
           <tbody>
-            {state.map((value) => (
-              <tr
-                key={value.id}
-                className="bg-blue-500 border-b border-blue-400"
+            <tr className="bg-blue-500 border-b border-blue-400">
+              <td
+                scope="row"
+                className="px-6 py-3 font-medium text-blue-50 whitespace-nowrap dark:text-blue-100"
               >
-                <th
-                  scope="row"
-                  className="px-6 py-3 font-medium text-blue-50 whitespace-nowrap dark:text-blue-100"
-                >
-                  {value.expense}
-                </th>
-                <td className="px-6 py-3">{value.price}</td>
-                <td className="px-6 py-3">
-                  <button
-                    onClick={""}
-                    type="button"
-                    className="text-white bg-gradient-to-br from-green-300 to-sky-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-600 font-medium rounded-lg text-sm px-3 py-2 text-center mr-2 mb-2"
-                  >
-                    Editar
-                  </button>
+                {!name ? (
+                  <form onSubmit={handleSubmit}>
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder="Usuario de github"
+                    />
+                    <button type="submit">💾</button>
+                  </form>
+                ) : (
+                  <img
+                    className="rounded-full"
+                    src={`https://unavatar.io/github/${name}`}
+                    alt=""
+                    width={45}
+                  />
+                )}
+              </td>
+              <td className="px-6 py-3">{500}</td>
+              <td className="px-6 py-3">
+                <td className="px-6 py-3">{income}</td>
+              </td>
+              <td className="px-6 py-3">
+                {/* { % considerado} */}
+                <td className="px-6 py-3">{part}</td>
+              </td>
+              <td className="px-6 py-3">
+                {/* $ considerado */}
+                <td className="px-6 py-3 text-lg">
+                  <strong> {(incomes * part) / 100}</strong>
                 </td>
-                <td className="px-6 py-3">
-                  <button
-                    onClick={""}
-                    type="button"
-                    className="uppercase text-white bg-gradient-to-br from-pink-400 to-orange-300 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-700 font-medium rounded-lg text-sm px-3 py-2 text-center mr-2 mb-2"
-                  >
-                    x
-                  </button>
-                </td>
-                <td className="px-6 py-3">
-                  <button
-                    onClick={""}
-                    type="button"
-                    className="uppercase text-white bg-gradient-to-br from-pink-400 to-orange-300 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-700 font-medium rounded-lg text-sm px-3 py-2 text-center mr-2 mb-2"
-                  >
-                    x
-                  </button>
-                </td>
-                <td className="px-6 py-3">
-                  <button
-                    onClick={""}
-                    type="button"
-                    className="uppercase text-white bg-gradient-to-br from-pink-400 to-orange-300 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-700 font-medium rounded-lg text-sm px-3 py-2 text-center mr-2 mb-2"
-                  >
-                    x
-                  </button>
-                </td>
-              </tr>
-            ))}
+              </td>
+              {/* u$s total */}
+              <td className="px-6 py-3">{6546}</td>
+            </tr>
           </tbody>
           <tfoot>
             <tr className="bg-blue-500 border-b border-blue-400">
