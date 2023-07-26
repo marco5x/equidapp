@@ -9,7 +9,6 @@ export const Calulator = () => {
     incomes: "",
   });
 
-  //const part = Math.round((income / incomesTotals) * 100);
   const incomesTotals = Object.entries(state.users).reduce(
     (acc, val) => acc + val[1].incomes,
     0
@@ -28,7 +27,14 @@ export const Calulator = () => {
     const name = formData.get("name");
     const incomes = parseInt(formData.get("income"));
 
-    addUser({ id, name, incomes });
+    const userFound = Object.entries(state.users).map(
+      (us) => us[1].name === name
+    );
+    if (userFound[0] === true) {
+      alert("Ya existe el usuario. Prueba con otro 😏");
+    } else {
+      addUser({ id, name, incomes });
+    }
     forms.reset();
   };
 
@@ -41,7 +47,7 @@ export const Calulator = () => {
   /** <div class="relative overflow-x-auto shadow-md sm:rounded-lg"> clase para ser responsive */
 
   return (
-    <div className="">
+    <div className="relative overflow-x-auto shadow-md">
       <section>
         <p>{tot}</p>
         <table className="w-9/12 text-sm text-left text-blue-100 dark:text-blue-100">
@@ -94,19 +100,30 @@ export const Calulator = () => {
                 {/* Ver tipo de cambio con select */}
                 <td className="px-6 py-3">{505}</td>
                 <td className="px-6 py-3">
-                  {/* Input para ingresar ingresos */}
                   <td className="px-6 py-3">{user.incomes}</td>
                 </td>
                 <td className="px-6 py-3">
-                  <td className="px-6 py-3">{500}</td>
+                  <td className="px-6 py-3">
+                    {Math.round((user.incomes / incomesTotals) * 100)}
+                  </td>
                 </td>
                 <td className="px-6 py-3">
                   <td className="px-6 py-3 text-lg">
-                    <strong> {(tot * 380) / 100}</strong>
+                    <strong>
+                      {Math.round(
+                        (tot * ((user.incomes / incomesTotals) * 100)) / 100
+                      )}
+                    </strong>
                   </td>
                 </td>
                 {/* u$s total ver select para dolares */}
-                <td className="px-6 py-3">{6546}</td>
+                <td className="px-6 py-3">
+                  {(
+                    (tot * ((user.incomes / incomesTotals) * 100)) /
+                    100 /
+                    500
+                  ).toFixed(2)}
+                </td>
                 <td className="px-6 py-3">
                   <button
                     onClick={() => {
