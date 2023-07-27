@@ -5,24 +5,14 @@ import axios from "axios";
 export const Calulator = () => {
   const { state, addUser, editUser, deleteUser } = useStore();
   const [ids, setIds] = useState(null);
-  const [dolar, setDolar] = useState("oficial");
-  const [valueDolar, setValueDolar] = useState("oficial");
+  const [dolar, setDolar] = useState("");
+  const [valueDolar, setValueDolar] = useState(undefined);
 
   const [income, setIncome] = useState({
     name: "",
     incomes: "",
     incomeDollar: "",
   });
-
-  const incomesTotals = Object.entries(state.users).reduce(
-    (acc, val) => acc + val[1].incomes,
-    0
-  );
-
-  const tot = Object.entries(state.consumptions).reduce(
-    (acc, val) => acc + val[1].price,
-    0
-  );
 
   const dollars = async () => {
     const { data } = await axios.get(
@@ -32,20 +22,31 @@ export const Calulator = () => {
   };
 
   const dollar = (tipo) => {
-    if (tipo === "oficial") {
-      return dolar[0].compra;
-    } else if (tipo === "mep") {
-      return dolar[2].compra;
-    } else if (tipo === "blue") {
-      return dolar[1].compra;
-    }
+    if (tipo === "oficial") return dolar[0].compra;
+    else if (tipo === "mep") return dolar[2].compra;
+    else if (tipo === "blue") return dolar[1].compra;
+    else if (tipo === undefined) return dolar[0]?.compra;
   };
+
+  const tot = Object.entries(state.consumptions).reduce(
+    (acc, val) => acc + val[1].price,
+    0
+  );
+
+  const incomesTotals = Object.entries(state.users).reduce(
+    (acc, val) => acc + val[1].incomes,
+    0
+  );
+  const dollarsTotals =
+    Object.entries(state.users).reduce(
+      (acc, val) => acc + val[1].incomeDollar,
+      0
+    ) * dollar(valueDolar?.valueDolar);
+  const totals = incomesTotals + dollarsTotals;
 
   useEffect(() => {
     dollars().then((dolar) => setDolar(dolar));
   }, []);
-  //console.log(dolar[2].compra);
-  //console.log(dollar(valueDolar));
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -53,11 +54,13 @@ export const Calulator = () => {
     const formData = new FormData(forms);
     const id = crypto.randomUUID();
     const name = formData.get("name");
-    const incomes = parseInt(formData.get("income"));
-    const incomeDollar = parseInt(formData.get("dollar"));
+    let incomes = parseInt(formData.get("income"));
+    let incomeDollar = parseInt(formData.get("dollar"));
     const userFound = Object.entries(state.users).map(
       (us) => us[1].name === name
     );
+    if (isNaN(incomes)) incomes = 0;
+    if (isNaN(incomeDollar)) incomeDollar = 0;
     if (userFound[0] === true) {
       alert("Ya existe el usuario. Prueba con otro 😏");
     } else {
@@ -89,37 +92,36 @@ export const Calulator = () => {
         <table className="w-9/12 text-sm text-left text-blue-100 dark:text-blue-100">
           <thead className="text-xs text-white uppercase bg-blue-600 dark:text-white">
             <tr>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-3 py-3">
                 Usuario
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-3 py-3">
                 <select
                   className=" rounded-sm bg-blue-600 "
                   name="valueDolar"
                   onChange={handleDollar}
                 >
-                  <option>T. CAMBIO</option>
-                  <option value="oficial">OFICIAL 🟢</option>
-                  <option value="mep">MEP 🟣</option>
-                  <option value="blue">BLUE 🔵</option>
+                  <option value="oficial">💵 OFICIAL 🟢</option>
+                  <option value="mep">💰 MEP 🟣</option>
+                  <option value="blue">💸 BLUE 🔵</option>
                 </select>
               </th>
-              <th scope="col" className=" px-6 py-3">
+              <th scope="col" className="px-3 py-3">
                 Ingresos
               </th>
-              <th scope="col" className="uppercase px-6 py-3">
+              <th scope="col" className="uppercase px-3 py-3">
                 % Considerado
               </th>
-              <th scope="col" className="uppercase px-6 py-3">
+              <th scope="col" className="uppercase px-3 py-3">
                 $ Considerado
               </th>
-              <th scope="col" className="uppercase px-6 py-3">
+              <th scope="col" className="uppercase px-3 py-3">
                 u$s Total
               </th>
-              <th scope="col" className=" px-6 py-3">
+              <th scope="col" className="px-3 py-3">
                 Editar
               </th>
-              <th scope="col" className="uppercase px-6 py-3">
+              <th scope="col" className="uppercase px-3 py-3">
                 Eliminar
               </th>
             </tr>
@@ -133,7 +135,7 @@ export const Calulator = () => {
               >
                 <td
                   scope="row"
-                  className="px-6 py-3 font-medium text-blue-50 whitespace-nowrap dark:text-blue-100"
+                  className="px-3 py-3 font-medium text-blue-50 whitespace-nowrap dark:text-blue-100"
                 >
                   <img
                     className="rounded-full"
@@ -142,39 +144,43 @@ export const Calulator = () => {
                     width={45}
                   />
                 </td>
-                {/* Ver tipo de cambio con select */}
-                <td className="px-6 py-3">
-                  {(user.incomeDollar
-                    ? user.incomeDollar
-                    : 0 * dollar(valueDolar?.valueDolar)
-                  ).toFixed(2)}
+                <td className="px-3 py-3">
+                  {(user.incomeDollar * dollar(valueDolar?.valueDolar)).toFixed(
+                    2
+                  )}
                 </td>
-                <td className="px-6 py-3">
-                  <td className="px-6 py-3">{user.incomes}</td>
-                </td>
-                <td className="px-6 py-3">
+                <td className="px-3 py-3">
                   <td className="px-6 py-3">
-                    {Math.round((user.incomes / incomesTotals) * 100)}
+                    {(
+                      user.incomes +
+                      user.incomeDollar * dollar(valueDolar?.valueDolar)
+                    ).toFixed(2)}
                   </td>
                 </td>
-                <td className="px-6 py-3">
-                  <td className="px-6 py-3 text-lg">
+                <td className="px-3 py-3">
+                  <td className="px-3 py-3">
+                    {/* ver bien los porcentajes !!!!!!!!!!!!!!!!! */}
+                    {/* 👀 ver esto */}
+                    {Math.round((user.incomes / totals) * 100)}
+                  </td>
+                </td>
+                <td className="px-3 py-3">
+                  <td className="px-3 py-3 text-lg">
                     <strong>
                       {Math.round(
-                        (tot * ((user.incomes / incomesTotals) * 100)) / 100
+                        (tot * ((user.incomes / totals) * 100)) / 100
                       )}
                     </strong>
                   </td>
                 </td>
-                {/* u$s total ver select para dolares */}
-                <td className="px-6 py-3">
+                <td className="px-3 py-3">
                   {(
-                    (tot * ((user.incomes / incomesTotals) * 100)) /
+                    (tot * ((user.incomes / totals) * 100)) /
                     100 /
-                    500
+                    dollar(valueDolar?.valueDolar)
                   ).toFixed(2)}
                 </td>
-                <td className="px-6 py-3">
+                <td className="px-3 py-3">
                   <button
                     onClick={() => {
                       setIds(user.id);
@@ -185,7 +191,7 @@ export const Calulator = () => {
                     Editar
                   </button>
                 </td>
-                <td className="px-6 py-3">
+                <td className="px-3 py-3">
                   <button
                     onClick={() => {
                       deleteUser(user.id);
@@ -226,13 +232,13 @@ export const Calulator = () => {
             className="w-auto rounded-sm"
             type="number"
             name="income"
-            placeholder="90000"
+            placeholder="99000 (pesos)"
           />
           <input
             className="w-auto rounded-sm"
             type="number"
             name="dollar"
-            placeholder="500 (dollar)"
+            placeholder="500 (dolar)"
           />
           <button type="submit">💾</button>
         </form>

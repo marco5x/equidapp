@@ -54,7 +54,7 @@ export const Consumption = () => {
 
   return (
     <div className="flex flex-col ">
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <div className="relative overflow-x-auto shadow-sm sm:rounded-lg">
         <table className="w-9/12 text-sm text-left text-blue-100 dark:text-blue-100">
           <thead className="text-xs text-white uppercase bg-blue-600 dark:text-white">
             <tr>
@@ -67,7 +67,7 @@ export const Consumption = () => {
               <th scope="col" className=" px-6 py-3">
                 Editar
               </th>
-              <th scope="col" className="uppercase px-6 py-3">
+              <th scope="col" className="uppercase px-3 py-3">
                 Eliminar
               </th>
             </tr>
@@ -92,7 +92,7 @@ export const Consumption = () => {
                       setForm(false);
                     }}
                     type="button"
-                    className="text-white bg-gradient-to-br from-green-300 to-sky-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-600 font-medium rounded-lg text-sm px-3 py-2 text-center mr-2 mb-2"
+                    className="text-white bg-gradient-to-br from-green-300 to-sky-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-600 font-medium rounded-lg text-sm px-2 py-1.5 text-center mr-2 mb-2"
                   >
                     Editar
                   </button>
@@ -103,9 +103,9 @@ export const Consumption = () => {
                       deleteConsumption(value.id);
                     }}
                     type="button"
-                    className="uppercase text-white bg-gradient-to-br from-pink-400 to-orange-300 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-700 font-medium rounded-lg text-sm px-3 py-2 text-center mr-2 mb-2"
+                    className=" text-white bg-gradient-to-br from-pink-400 to-orange-300 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-700 font-medium rounded-lg text-2xl px-2 text-center mr-2 mb-2"
                   >
-                    x
+                    ×
                   </button>
                 </td>
               </tr>
@@ -122,6 +122,7 @@ export const Consumption = () => {
             </tr>
           </tfoot>
         </table>
+        {/* FORMULARIO DE CONSUMOS */}
         {form && !ids ? (
           <form onSubmit={handleSubmit}>
             <label
@@ -156,6 +157,7 @@ export const Consumption = () => {
             </button>
           </form>
         ) : null}
+        {/* FORMULARIO EDITAR CONSUMOS */}
         {!form && ids ? (
           <form onSubmit={handleEdit}>
             <label
@@ -192,12 +194,13 @@ export const Consumption = () => {
             </button>
           </form>
         ) : null}
+        {/* BOTON PARA AGREGAR O EDITAR CONSUMOS */}
         <button
           type="button"
-          onClick={() => setForm(true)}
-          className=" right-2 text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-[50%] text-2xl p px-2 pb-1 text-center m-1"
+          onClick={() => setForm(!form)}
+          className=" right-2 text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-normal rounded-[50%] text-2xl p px-2 pb-1 text-center m-1"
         >
-          +
+          {form ? "×" : "+"}
         </button>
       </div>
     </div>

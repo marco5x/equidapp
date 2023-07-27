@@ -15,8 +15,6 @@ const initialState = {
 };
 
 const reducer = (state, action) => {
-  // lógica del estado dentro del reducer
-  // porque lo evitamos en los componentes
   const { type } = action;
 
   if (type === "ADD_CONSUMTION") {
@@ -58,7 +56,6 @@ const reducer = (state, action) => {
 };
 
 export const useStore = () => {
-  // 3. usar el hook useReducer
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const addConsumption = (payload) => {
