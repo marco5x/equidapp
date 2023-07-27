@@ -8,7 +8,8 @@ const initialState = {
   users: [
     {
       name: "marco5x",
-      incomes: 30000,
+      incomes: 60000,
+      incomeDollar: 10,
     },
   ],
 };
@@ -41,12 +42,11 @@ const reducer = (state, action) => {
   if (type === "ADD_USER") {
     return { ...state, users: [...state.users, action.payload] };
   } else if (type === "EDIT_USER") {
-    const { id, name, income } = action.payload;
+    const { id, name, income, incomeDollar } = action.payload;
     const foundUser = state.users.find((user) => user.id === id);
-    if (foundUser) {
-      foundUser.name = name;
-      foundUser.income = income;
-    }
+    foundUser.name = name;
+    foundUser.income = income;
+    foundUser.incomeDollar = incomeDollar;
   } else if (type === "DELETE_USER") {
     const id = action.payload;
     return {

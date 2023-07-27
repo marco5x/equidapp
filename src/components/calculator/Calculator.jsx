@@ -1,12 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useStore } from "../../hooks/useStore";
+import axios from "axios";
 
 export const Calulator = () => {
   const { state, addUser, editUser, deleteUser } = useStore();
   const [ids, setIds] = useState(null);
+  const [dolar, setDolar] = useState("oficial");
+  const [valueDolar, setValueDolar] = useState("oficial");
+
   const [income, setIncome] = useState({
     name: "",
     incomes: "",
+    incomeDollar: "",
   });
 
   const incomesTotals = Object.entries(state.users).reduce(
@@ -19,6 +24,29 @@ export const Calulator = () => {
     0
   );
 
+  const dollars = async () => {
+    const { data } = await axios.get(
+      "https://dolar-api-argentina.vercel.app/v1/dolares/"
+    );
+    return await data;
+  };
+
+  const dollar = (tipo) => {
+    if (tipo === "oficial") {
+      return dolar[0].compra;
+    } else if (tipo === "mep") {
+      return dolar[2].compra;
+    } else if (tipo === "blue") {
+      return dolar[1].compra;
+    }
+  };
+
+  useEffect(() => {
+    dollars().then((dolar) => setDolar(dolar));
+  }, []);
+  //console.log(dolar[2].compra);
+  //console.log(dollar(valueDolar));
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const forms = event.target;
@@ -26,16 +54,24 @@ export const Calulator = () => {
     const id = crypto.randomUUID();
     const name = formData.get("name");
     const incomes = parseInt(formData.get("income"));
-
+    const incomeDollar = parseInt(formData.get("dollar"));
     const userFound = Object.entries(state.users).map(
       (us) => us[1].name === name
     );
     if (userFound[0] === true) {
       alert("Ya existe el usuario. Prueba con otro 😏");
     } else {
-      addUser({ id, name, incomes });
+      addUser({ id, name, incomes, incomeDollar });
     }
     forms.reset();
+  };
+
+  const handleDollar = (event) => {
+    event.preventDefault();
+    setValueDolar({
+      ...valueDolar,
+      [event.target.name]: event.target.value,
+    });
   };
 
   const handleEdit = (event) => {
@@ -57,7 +93,16 @@ export const Calulator = () => {
                 Usuario
               </th>
               <th scope="col" className="px-6 py-3">
-                $ T. Cambio
+                <select
+                  className=" rounded-sm bg-blue-600 "
+                  name="valueDolar"
+                  onChange={handleDollar}
+                >
+                  <option>T. CAMBIO</option>
+                  <option value="oficial">OFICIAL 🟢</option>
+                  <option value="mep">MEP 🟣</option>
+                  <option value="blue">BLUE 🔵</option>
+                </select>
               </th>
               <th scope="col" className=" px-6 py-3">
                 Ingresos
@@ -98,7 +143,12 @@ export const Calulator = () => {
                   />
                 </td>
                 {/* Ver tipo de cambio con select */}
-                <td className="px-6 py-3">{505}</td>
+                <td className="px-6 py-3">
+                  {(user.incomeDollar
+                    ? user.incomeDollar
+                    : 0 * dollar(valueDolar?.valueDolar)
+                  ).toFixed(2)}
+                </td>
                 <td className="px-6 py-3">
                   <td className="px-6 py-3">{user.incomes}</td>
                 </td>
@@ -177,6 +227,12 @@ export const Calulator = () => {
             type="number"
             name="income"
             placeholder="90000"
+          />
+          <input
+            className="w-auto rounded-sm"
+            type="number"
+            name="dollar"
+            placeholder="500 (dollar)"
           />
           <button type="submit">💾</button>
         </form>
