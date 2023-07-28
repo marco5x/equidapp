@@ -1,18 +1,15 @@
 import { useEffect, useState } from "react";
 import { useStore } from "../../hooks/useStore";
 import axios from "axios";
+import { FormUsers } from "./FormAddUser";
+import { FormEditUser } from "./FormEditUser";
 
 export const Calulator = () => {
-  const { state, addUser, editUser, deleteUser } = useStore();
+  const { state, deleteUser } = useStore();
   const [ids, setIds] = useState(null);
+  const [form, setForm] = useState(false);
   const [dolar, setDolar] = useState("");
   const [valueDolar, setValueDolar] = useState(undefined);
-
-  const [income, setIncome] = useState({
-    name: "",
-    incomes: "",
-    incomeDollar: "",
-  });
 
   const dollars = async () => {
     const { data } = await axios.get(
@@ -48,27 +45,6 @@ export const Calulator = () => {
     dollars().then((dolar) => setDolar(dolar));
   }, []);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const forms = event.target;
-    const formData = new FormData(forms);
-    const id = crypto.randomUUID();
-    const name = formData.get("name");
-    let incomes = parseInt(formData.get("income"));
-    let incomeDollar = parseInt(formData.get("dollar"));
-    const userFound = Object.entries(state.users).map(
-      (us) => us[1].name === name
-    );
-    if (isNaN(incomes)) incomes = 0;
-    if (isNaN(incomeDollar)) incomeDollar = 0;
-    if (userFound[0] === true) {
-      alert("Ya existe el usuario. Prueba con otro 😏");
-    } else {
-      addUser({ id, name, incomes, incomeDollar });
-    }
-    forms.reset();
-  };
-
   const handleDollar = (event) => {
     event.preventDefault();
     setValueDolar({
@@ -77,16 +53,8 @@ export const Calulator = () => {
     });
   };
 
-  const handleEdit = (event) => {
-    event.preventDefault();
-    editUser({ id: ids, ...income });
-    setIncome(state.users);
-    setIds(null);
-  };
-  /** <div class="relative overflow-x-auto shadow-md sm:rounded-lg"> clase para ser responsive */
-
   return (
-    <div className="relative overflow-x-auto shadow-md">
+    <div className="relative overflow-y-auto shadow-sm ">
       <section>
         <p>{tot}</p>
         <table className="w-9/12 text-sm text-left text-blue-100 dark:text-blue-100">
@@ -96,6 +64,7 @@ export const Calulator = () => {
                 Usuario
               </th>
               <th scope="col" className="px-3 py-3">
+                <p>{dollar(valueDolar?.valueDolar)} (Compra)</p>
                 <select
                   className=" rounded-sm bg-blue-600 "
                   name="valueDolar"
@@ -159,23 +128,36 @@ export const Calulator = () => {
                 </td>
                 <td className="px-3 py-3">
                   <td className="px-3 py-3">
-                    {/* ver bien los porcentajes !!!!!!!!!!!!!!!!! */}
-                    {/* 👀 ver esto */}
-                    {Math.round((user.incomes / totals) * 100)}
+                    {Math.round(
+                      ((user.incomes +
+                        user.incomeDollar * dollar(valueDolar?.valueDolar)) /
+                        totals) *
+                        100
+                    )}
                   </td>
                 </td>
                 <td className="px-3 py-3">
                   <td className="px-3 py-3 text-lg">
                     <strong>
                       {Math.round(
-                        (tot * ((user.incomes / totals) * 100)) / 100
+                        (tot *
+                          (((user.incomes +
+                            user.incomeDollar *
+                              dollar(valueDolar?.valueDolar)) /
+                            totals) *
+                            100)) /
+                          100
                       )}
                     </strong>
                   </td>
                 </td>
                 <td className="px-3 py-3">
                   {(
-                    (tot * ((user.incomes / totals) * 100)) /
+                    (tot *
+                      (((user.incomes +
+                        user.incomeDollar * dollar(valueDolar?.valueDolar)) /
+                        totals) *
+                        100)) /
                     100 /
                     dollar(valueDolar?.valueDolar)
                   ).toFixed(2)}
@@ -220,28 +202,16 @@ export const Calulator = () => {
             </tr>
           </tfoot>
         </table>
-        {/** FORMULARIO */}
-        <form onSubmit={handleSubmit}>
-          <input
-            className="w-auto rounded-sm"
-            type="text"
-            name="name"
-            placeholder="Usuario de github"
-          />
-          <input
-            className="w-auto rounded-sm"
-            type="number"
-            name="income"
-            placeholder="99000 (pesos)"
-          />
-          <input
-            className="w-auto rounded-sm"
-            type="number"
-            name="dollar"
-            placeholder="500 (dolar)"
-          />
-          <button type="submit">💾</button>
-        </form>
+        {form && !ids ? <FormUsers /> : null}
+        {ids ? <FormEditUser ids={ids} /> : null}
+        {/* BOTON PARA AGREGAR O EDITAR CONSUMOS */}
+        <button
+          type="button"
+          onClick={() => setForm(!form)}
+          className=" right-2 text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-normal rounded-[50%] text-2xl p px-2 pb-1 text-center m-1"
+        >
+          {form ? "×" : "+"}
+        </button>
       </section>
     </div>
   );

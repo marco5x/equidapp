@@ -5,8 +5,8 @@ export const Consumption = () => {
   const { state, addConsumption, editConsumption, deleteConsumption } =
     useStore();
 
-  const [ids, setIds] = useState(null);
   const [form, setForm] = useState(false);
+  const [ids, setIds] = useState(null);
   const [consumptions, setConsumptions] = useState({
     expense: "",
     price: "",
@@ -14,13 +14,10 @@ export const Consumption = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     const forms = event.target;
     const formData = new FormData(forms);
-
     const expense = formData.get("expense");
     const price = parseInt(formData.get("price"));
-
     const id = crypto.randomUUID();
     addConsumption({ id, expense, price });
     forms.reset();
@@ -31,7 +28,6 @@ export const Consumption = () => {
     event.preventDefault();
     editConsumption({ id: ids, ...consumptions });
     setConsumptions(state.consumptions);
-    setIds(null);
   };
 
   const handleChange = (event) => {
@@ -61,13 +57,13 @@ export const Consumption = () => {
               <th scope="col" className="px-6 py-3">
                 Consumos
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="text-center px-6 py-3">
                 $
               </th>
-              <th scope="col" className=" px-6 py-3">
+              <th scope="col" className="text-center px-6 py-3">
                 Editar
               </th>
-              <th scope="col" className="uppercase px-3 py-3">
+              <th scope="col" className="uppercase text-center px-3 py-3">
                 Eliminar
               </th>
             </tr>
