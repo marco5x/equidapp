@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useStore } from "../../hooks/useStore";
-import axios from "axios";
 import { FormUsers } from "./FormAddUser";
 import { FormEditUser } from "./FormEditUser";
 
@@ -12,7 +11,7 @@ export const Calulator = () => {
   const [valueDolar, setValueDolar] = useState(undefined);
 
   const dollars = async () => {
-    const { data } = await axios.get(
+    const { data } = await fetch(
       "https://dolar-api-argentina.vercel.app/v1/dolares/"
     );
     return await data;
@@ -22,20 +21,20 @@ export const Calulator = () => {
     if (tipo === "oficial") return dolar[0].compra;
     else if (tipo === "mep") return dolar[2].compra;
     else if (tipo === "blue") return dolar[1].compra;
-    else if (tipo === undefined) return dolar[0]?.compra;
+    else if (tipo === undefined) return 500;
   };
 
-  const tot = Object.entries(state.consumptions).reduce(
+  const tot = Object.entries(state?.consumptions).reduce(
     (acc, val) => acc + val[1].price,
     0
   );
 
-  const incomesTotals = Object.entries(state.users).reduce(
+  const incomesTotals = Object.entries(state?.users).reduce(
     (acc, val) => acc + val[1].incomes,
     0
   );
   const dollarsTotals =
-    Object.entries(state.users).reduce(
+    Object.entries(state?.users).reduce(
       (acc, val) => acc + val[1].incomeDollar,
       0
     ) * dollar(valueDolar?.valueDolar);

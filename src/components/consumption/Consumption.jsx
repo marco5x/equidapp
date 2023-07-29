@@ -1,9 +1,17 @@
 import { useState, useEffect } from "react";
+import { useAppDispatch, useConsumptionSelector } from "../../redux/hooks";
+import {
+  addConsumption,
+  editConsumption,
+  deleteConsumption,
+} from "../../redux/features/consumption/consumptionSlice";
 import { useStore } from "../../hooks/useStore";
 
 export const Consumption = () => {
-  const { state, addConsumption, editConsumption, deleteConsumption } =
-    useStore();
+  //const { state, addConsumption, editConsumption, deleteConsumption } = useStore();
+  const consumption = useConsumptionSelector((state) => state.consumption);
+  //console.log(consumption);
+  const dispatch = useAppDispatch();
 
   const [form, setForm] = useState(false);
   const [ids, setIds] = useState(null);
@@ -19,7 +27,7 @@ export const Consumption = () => {
     const expense = formData.get("expense");
     const price = parseInt(formData.get("price"));
     const id = crypto.randomUUID();
-    addConsumption({ id, expense, price });
+    dispatch(addConsumption({ id, expense, price }));
     forms.reset();
     setForm(false);
   };
@@ -27,7 +35,7 @@ export const Consumption = () => {
   const handleEdit = (event) => {
     event.preventDefault();
     editConsumption({ id: ids, ...consumptions });
-    setConsumptions(state.consumptions);
+    setConsumptions(consumption);
   };
 
   const handleChange = (event) => {
@@ -37,16 +45,16 @@ export const Consumption = () => {
     });
   };
 
-  const total = Object.entries(state.consumptions).reduce(
+  const total = Object.entries(consumption).reduce(
     (acc, val) => acc + val[1].price,
     0
   );
 
   useEffect(() => {
     if (ids) {
-      setConsumptions(state.consumptions.find((cons) => cons.id === ids));
+      setConsumptions(consumption.find((cons) => cons.id === ids));
     }
-  }, [ids, state]);
+  }, [ids, consumption]);
 
   return (
     <div className="flex flex-col ">
@@ -69,7 +77,7 @@ export const Consumption = () => {
             </tr>
           </thead>
           <tbody>
-            {state.consumptions.map((value) => (
+            {consumption.map((value) => (
               <tr
                 key={value.id}
                 className="bg-blue-500 border-b border-blue-400"
