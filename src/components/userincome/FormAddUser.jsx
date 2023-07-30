@@ -1,7 +1,9 @@
-import { useStore } from "../../hooks/useStore";
+import { useAppDispatch, useUserSelector } from "../../redux/hooks";
+import { addUser } from "../../redux/features/user/userSlice";
 
-export const FormUsers = () => {
-  const { state, addUser } = useStore();
+export const FormUsers = ({ form, set }) => {
+  const users = useUserSelector((state) => state.user);
+  const dispatch = useAppDispatch();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -11,17 +13,17 @@ export const FormUsers = () => {
     const name = formData.get("name");
     let incomes = parseInt(formData.get("income"));
     let incomeDollar = parseInt(formData.get("dollar"));
-    const userFound = Object.entries(state.users).map(
-      (us) => us[1].name === name
-    );
+    const userFound = users.map((us) => us.name === name);
+
     if (isNaN(incomes)) incomes = 0;
     if (isNaN(incomeDollar)) incomeDollar = 0;
     if (userFound[0] === true) {
       alert("Ya existe el usuario. Prueba con otro 😏");
     } else {
-      addUser({ id, name, incomes, incomeDollar });
+      dispatch(addUser({ id, name, incomes, incomeDollar }));
     }
     forms.reset();
+    set(!form);
   };
 
   return (

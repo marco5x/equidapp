@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = [
   {
+    id: "1",
     name: "marco5x",
     incomes: 60000,
     incomeDollar: 10,
@@ -13,19 +14,24 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     addUser: (state, action) => {
-      state.concat(action.payload);
+      state.push(action.payload);
     },
-  },
-  editUser: (state, action) => {
-    const { id, name, income, incomeDollar } = action.payload;
-    const foundUser = state.users.find((user) => user.id === id);
-    foundUser.name = name;
-    foundUser.income = income;
-    foundUser.incomeDollar = incomeDollar;
-  },
-  deleteUser: (state, action) => {
-    const id = action.payload;
-    return { ...state.filter((user) => user.id !== id) };
+    editUser: (state, action) => {
+      const { id, name, incomes, incomeDollar } = action.payload;
+      const foundUser = state.find((user) => user.id === id);
+      if (foundUser) {
+        foundUser.name = name;
+        foundUser.incomes = incomes;
+        foundUser.incomeDollar = incomeDollar;
+      } else {
+        return state;
+      }
+    },
+    deleteUser: (state, action) => {
+      const id = action.payload;
+      const newState = state.filter((user) => user.id !== id);
+      return newState;
+    },
   },
 });
 

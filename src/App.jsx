@@ -1,4 +1,4 @@
-import { Calulator } from "./components/calculator/Calculator";
+import { UserIncomes } from "./components/userincome/UserIncomes";
 import { Consumption } from "./components/consumption/Consumption";
 import { Header } from "./components/header/Header";
 
@@ -8,9 +8,9 @@ export const App = () => {
       <h1 className="hidden">equidApp</h1>
       <Header />
       <Consumption />
-      <Calulator />
+      <UserIncomes />
       <footer className="fixed bottom-1">
-        Vivamos en un mundo mas equitativo ⚖
+        VIVAMOS EN UN MUNDO MAS EQUITATIVO!! ⚖
       </footer>
     </div>
   );

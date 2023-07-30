@@ -1,60 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAppDispatch, useConsumptionSelector } from "../../redux/hooks";
-import {
-  addConsumption,
-  editConsumption,
-  deleteConsumption,
-} from "../../redux/features/consumption/consumptionSlice";
-import { useStore } from "../../hooks/useStore";
+import { deleteConsumption } from "../../redux/features/consumption/consumptionSlice";
+import { FormAddConsumption } from "./FormAddComsumption";
+import { FormEditConsumption } from "./FormEditConsumption";
 
 export const Consumption = () => {
-  //const { state, addConsumption, editConsumption, deleteConsumption } = useStore();
   const consumption = useConsumptionSelector((state) => state.consumption);
-  //console.log(consumption);
   const dispatch = useAppDispatch();
-
   const [form, setForm] = useState(false);
+  const [edit, setEdit] = useState(false);
   const [ids, setIds] = useState(null);
-  const [consumptions, setConsumptions] = useState({
-    expense: "",
-    price: "",
-  });
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const forms = event.target;
-    const formData = new FormData(forms);
-    const expense = formData.get("expense");
-    const price = parseInt(formData.get("price"));
-    const id = crypto.randomUUID();
-    dispatch(addConsumption({ id, expense, price }));
-    forms.reset();
-    setForm(false);
-  };
-
-  const handleEdit = (event) => {
-    event.preventDefault();
-    editConsumption({ id: ids, ...consumptions });
-    setConsumptions(consumption);
-  };
-
-  const handleChange = (event) => {
-    setConsumptions({
-      ...consumptions,
-      [event.target.name]: event.target.value,
-    });
-  };
-
-  const total = Object.entries(consumption).reduce(
-    (acc, val) => acc + val[1].price,
-    0
-  );
-
-  useEffect(() => {
-    if (ids) {
-      setConsumptions(consumption.find((cons) => cons.id === ids));
-    }
-  }, [ids, consumption]);
+  const total = consumption.reduce((acc, val) => acc + val.price, 0);
 
   return (
     <div className="flex flex-col ">
@@ -77,7 +34,7 @@ export const Consumption = () => {
             </tr>
           </thead>
           <tbody>
-            {consumption.map((value) => (
+            {consumption?.map((value) => (
               <tr
                 key={value.id}
                 className="bg-blue-500 border-b border-blue-400"
@@ -93,7 +50,7 @@ export const Consumption = () => {
                   <button
                     onClick={() => {
                       setIds(value.id);
-                      setForm(false);
+                      setEdit(true);
                     }}
                     type="button"
                     className="text-white bg-gradient-to-br from-green-300 to-sky-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-600 font-medium rounded-lg text-sm px-2 py-1.5 text-center mr-2 mb-2"
@@ -104,7 +61,7 @@ export const Consumption = () => {
                 <td className="px-6 py-3">
                   <button
                     onClick={() => {
-                      deleteConsumption(value.id);
+                      dispatch(deleteConsumption(value.id));
                     }}
                     type="button"
                     className=" text-white bg-gradient-to-br from-pink-400 to-orange-300 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-700 font-medium rounded-lg text-2xl px-2 text-center mr-2 mb-2"
@@ -127,76 +84,10 @@ export const Consumption = () => {
           </tfoot>
         </table>
         {/* FORMULARIO DE CONSUMOS */}
-        {form && !ids ? (
-          <form onSubmit={handleSubmit}>
-            <label
-              htmlFor="expense"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              <input
-                type="text"
-                name="expense"
-                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                placeholder="alquiler departamento.."
-                required
-              />
-            </label>
-            <label
-              htmlFor="price"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              <input
-                type="number"
-                name="price"
-                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                placeholder="80000"
-                required
-              />
-            </label>
-            <button
-              type="submit"
-              className="text-white block w-full bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 font-medium rounded-lg text-sm px-4 py-2.5 text-center dark:focus:ring-blue-900"
-            >
-              Agregar
-            </button>
-          </form>
-        ) : null}
+        {form && !ids ? <FormAddConsumption form={form} set={setForm} /> : null}
         {/* FORMULARIO EDITAR CONSUMOS */}
-        {!form && ids ? (
-          <form onSubmit={handleEdit}>
-            <label
-              htmlFor="expense"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              <input
-                type="text"
-                name="expense"
-                onChange={handleChange}
-                value={consumptions?.expense}
-                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                required
-              />
-            </label>
-            <label
-              htmlFor="price"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              <input
-                type="number"
-                name="price"
-                onChange={handleChange}
-                value={consumptions?.price}
-                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                required
-              />
-            </label>
-            <button
-              type="submit"
-              className="text-white block w-full bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 font-medium rounded-lg text-sm px-4 py-2.5 text-center dark:focus:ring-blue-900"
-            >
-              Guardar
-            </button>
-          </form>
+        {edit && ids ? (
+          <FormEditConsumption id={ids} edit={edit} set={setEdit} />
         ) : null}
         {/* BOTON PARA AGREGAR O EDITAR CONSUMOS */}
         <button

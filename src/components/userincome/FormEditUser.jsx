@@ -1,26 +1,29 @@
 import { useState } from "react";
-import { useStore } from "../../hooks/useStore";
+import { useAppDispatch, useUserSelector } from "../../redux/hooks";
+import { editUser } from "../../redux/features/user/userSlice";
 
-export const FormEditUser = ({ ids }) => {
-  const { state, editUser } = useStore();
+export const FormEditUser = ({ id, edit, set }) => {
+  const users = useUserSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+  const userEdit = users.find((user) => user.id === id);
 
   const [income, setIncome] = useState({
-    name: "",
-    incomes: "",
-    incomeDollar: "",
+    name: userEdit.name,
+    incomes: userEdit.incomes,
+    incomeDollar: userEdit.incomeDollar,
   });
-
-  const handleEdit = (event) => {
-    event.preventDefault();
-    editUser({ id: ids, ...income });
-    setIncome(state.users);
-  };
 
   const handleChange = (event) => {
     setIncome({
       ...income,
       [event.target.name]: event.target.value,
     });
+  };
+
+  const handleEdit = (event) => {
+    event.preventDefault();
+    dispatch(editUser({ id, ...income }));
+    set(!edit);
   };
 
   return (
@@ -33,7 +36,7 @@ export const FormEditUser = ({ ids }) => {
           type="text"
           name="name"
           onChange={handleChange}
-          value={income?.name}
+          value={income.name}
           className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
         />
       </label>
@@ -45,7 +48,7 @@ export const FormEditUser = ({ ids }) => {
           type="number"
           name="incomes"
           onChange={handleChange}
-          value={income?.incomes}
+          value={income.incomes}
           className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
         />
       </label>
@@ -57,7 +60,7 @@ export const FormEditUser = ({ ids }) => {
           type="number"
           name="incomeDollar"
           onChange={handleChange}
-          value={income?.incomeDollar}
+          value={income.incomeDollar}
           className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
         />
       </label>

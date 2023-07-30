@@ -14,19 +14,20 @@ export const consumptionSlice = createSlice({
     },
     editConsumption: (state, action) => {
       const { id, expense, price } = action.payload;
-      const foundConsumption = state.consumptions.find(
+      const foundConsumption = state.find(
         (consumption) => consumption.id === id
       );
       if (foundConsumption) {
         foundConsumption.expense = expense;
         foundConsumption.price = parseInt(price);
+      } else {
+        return state;
       }
     },
     deleteConsumption: (state, action) => {
       const id = action.payload;
-      return {
-        ...state.filter((consumption) => consumption.id !== id),
-      };
+      const newState = state.filter((consumption) => consumption.id !== id);
+      return newState;
     },
   },
 });

@@ -1,48 +1,49 @@
-import { useEffect, useState } from "react";
-import { useStore } from "../../hooks/useStore";
+import { useState } from "react";
+import {
+  useAppDispatch,
+  useUserSelector,
+  useConsumptionSelector,
+} from "../../redux/hooks";
+import {
+  useGetDolarOficialQuery,
+  useGetDolarMepQuery,
+  useGetDolarBlueQuery,
+} from "../../redux/api/dolarApi";
+import { deleteUser } from "../../redux/features/user/userSlice";
 import { FormUsers } from "./FormAddUser";
 import { FormEditUser } from "./FormEditUser";
 
-export const Calulator = () => {
-  const { state, deleteUser } = useStore();
-  const [ids, setIds] = useState(null);
+export const UserIncomes = () => {
+  const consumption = useConsumptionSelector((state) => state.consumption);
+  const users = useUserSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+
+  const [ids, setIds] = useState(0);
   const [form, setForm] = useState(false);
-  const [dolar, setDolar] = useState("");
+  const [edit, setEdit] = useState(false);
   const [valueDolar, setValueDolar] = useState(undefined);
 
-  const dollars = async () => {
-    const { data } = await fetch(
-      "https://dolar-api-argentina.vercel.app/v1/dolares/"
-    );
-    return await data;
-  };
+  const { data: oficial, error: err } = useGetDolarOficialQuery();
+  const { data: mep, error } = useGetDolarMepQuery();
+  const { data: blue, error: errors } = useGetDolarBlueQuery();
+  const dolarOficial = oficial?.compra;
+  const dolarMep = mep?.compra;
+  const dolarBlue = blue?.compra;
 
   const dollar = (tipo) => {
-    if (tipo === "oficial") return dolar[0].compra;
-    else if (tipo === "mep") return dolar[2].compra;
-    else if (tipo === "blue") return dolar[1].compra;
-    else if (tipo === undefined) return 500;
+    if (tipo === "oficial") return dolarOficial;
+    else if (tipo === "mep") return dolarMep;
+    else if (tipo === "blue") return dolarBlue;
+    else if (tipo === undefined) return dolarOficial;
   };
 
-  const tot = Object.entries(state?.consumptions).reduce(
-    (acc, val) => acc + val[1].price,
-    0
-  );
+  const tot = consumption.reduce((acc, val) => acc + val.price, 0);
 
-  const incomesTotals = Object.entries(state?.users).reduce(
-    (acc, val) => acc + val[1].incomes,
-    0
-  );
+  const incomesTotals = users.reduce((acc, val) => acc + val.incomes, 0);
   const dollarsTotals =
-    Object.entries(state?.users).reduce(
-      (acc, val) => acc + val[1].incomeDollar,
-      0
-    ) * dollar(valueDolar?.valueDolar);
+    users.reduce((acc, val) => acc + val.incomeDollar, 0) *
+    dollar(valueDolar?.valueDolar);
   const totals = incomesTotals + dollarsTotals;
-
-  useEffect(() => {
-    dollars().then((dolar) => setDolar(dolar));
-  }, []);
 
   const handleDollar = (event) => {
     event.preventDefault();
@@ -51,11 +52,11 @@ export const Calulator = () => {
       [event.target.name]: event.target.value,
     });
   };
+  if (err || error || errors) return "Error en datos de dolar";
 
   return (
     <div className="relative overflow-y-auto shadow-sm ">
       <section>
-        <p>{tot}</p>
         <table className="w-9/12 text-sm text-left text-blue-100 dark:text-blue-100">
           <thead className="text-xs text-white uppercase bg-blue-600 dark:text-white">
             <tr>
@@ -65,7 +66,7 @@ export const Calulator = () => {
               <th scope="col" className="px-3 py-3">
                 <p>{dollar(valueDolar?.valueDolar)} (Compra)</p>
                 <select
-                  className=" rounded-sm bg-blue-600 "
+                  className=" rounded-sm bg-blue-400 "
                   name="valueDolar"
                   onChange={handleDollar}
                 >
@@ -96,7 +97,7 @@ export const Calulator = () => {
           </thead>
           <tbody>
             {/**  ** BODY ** */}
-            {state.users.map((user) => (
+            {users.map((user) => (
               <tr
                 key={user.id}
                 className="bg-blue-500 border-b border-blue-400"
@@ -165,20 +166,21 @@ export const Calulator = () => {
                   <button
                     onClick={() => {
                       setIds(user.id);
+                      setEdit(true);
                     }}
                     type="button"
                     className="text-white bg-gradient-to-br from-green-300 to-sky-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-600 font-medium rounded-lg text-sm px-3 py-2 text-center mr-2 mb-2"
                   >
-                    Editar
+                    EDITAR
                   </button>
                 </td>
                 <td className="px-3 py-3">
                   <button
                     onClick={() => {
-                      deleteUser(user.id);
+                      dispatch(deleteUser(user.id));
                     }}
                     type="button"
-                    className="uppercase text-white bg-gradient-to-br from-pink-400 to-orange-300 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-700 font-medium rounded-lg text-sm px-3 py-2 text-center mr-2 mb-2"
+                    className=" text-white bg-gradient-to-br from-pink-400 to-orange-300 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-700 font-medium rounded-lg text-sm px-3 py-2 text-center mr-2 mb-2"
                   >
                     x
                   </button>
@@ -188,8 +190,8 @@ export const Calulator = () => {
           </tbody>
           <tfoot>
             <tr className="bg-blue-500 border-b border-blue-400">
-              <td className="uppercase px-6 py-4 font-bold text-blue-50 whitespace-nowrap dark:text-blue-100">
-                total
+              <td className=" px-6 py-4 font-bold text-blue-50 whitespace-nowrap dark:text-blue-100">
+                TOTAL
               </td>
               <td className=" font-bold text-lg px-0 py-1"></td>
               <td className=" font-bold text-lg px-0 py-1"></td>
@@ -201,8 +203,10 @@ export const Calulator = () => {
             </tr>
           </tfoot>
         </table>
-        {form && !ids ? <FormUsers /> : null}
-        {ids ? <FormEditUser ids={ids} /> : null}
+        {form && !ids ? <FormUsers form={form} set={setForm} /> : null}
+        {ids && edit ? (
+          <FormEditUser id={ids} edit={edit} set={setEdit} />
+        ) : null}
         {/* BOTON PARA AGREGAR O EDITAR CONSUMOS */}
         <button
           type="button"
