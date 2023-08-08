@@ -1,4 +1,22 @@
-# equidApp
+![proyectName](https://th.bing.com/th/id/OIP.Vqxtkq6WwU6tMUtrvMrPGwAAAA?pid=ImgDet&rs=1)
+
+# PWA
+
+## 💡 Idea:
+
+```
+El proyecto nace por una constitucion de una familia, unos amigos se casaron y fueron a vivir juntos. Entonces nacio una gran pregunta
+```
+
+### ¿Cómo se dividen los gastos de del mes?
+
+```
+Es muy fácil decir gastamos 100, ponemos 50 cada uno. Personalmente creo que eso es igualitario y no equitativo, y como persona con valores de equidad se me ocurrio la idea de llevarlo a cabo de una PWA (Progresive Web App), de manera que hasta podria funcionar sin conexíon de internet, salvando el uso de la cotización de tipo de cambio (dólar).
+
+Surgio entre los gastos el alquiler, y servicios. Entonces como uno de los integrantes cobraba en dólar y la otra en pesos argentinos. Se me ocurrio la idea de hacer una web app en donde pudieran calcular rápidamente los porcentajes y números de la manera mas equitativa posible.
+```
+
+##
 
 ```
 npm create vite@latest --
@@ -20,13 +38,17 @@ Inside of your project, you'll see the following folders and files:
 │   └── robots.txt
 ├── src/
 │   ├── components/
-│   │   └── Calculator
+│   │   └── Userincomes
 │   │   └── Consumption
 |   │   └── Header
 |   │   └──
 │   ├── hooks/
 │   │   └── useStore.js
-│   │   └── useFetch.js
+│   │   └── useTheme.js
+│   ├── redux/
+│   │   └── api
+│   │   └── app
+│   │   └── features
 │   └── main.jsx
 │   └── app.jsx
 │
