@@ -60,30 +60,33 @@ export const UserIncomes = () => {
   if (err || error || errors) return "Error en datos del dólar";
 
   return (
-    <div className="relative overflow-y-auto shadow-sm">
-      <table className="w-9/12 text-sm text-left text-blue-100 dark:text-blue-100">
-        <thead className="text-xs text-white uppercase bg-blue-600 dark:text-white">
+    <div className="relative overflow-y-auto shadow-sm md:overflow-x-hidden">
+      <table className="max-w-[80%] text-sm text-left text-blue-100 rounded-lg">
+        <thead className="text-xs text-white uppercase bg-blue-600 ">
           <tr>
-            <th scope="col" className="text-center px-1 py-3">
+            <th scope="col" className="rounded-tl-lg text-center px-1 py-3">
               Usuario
             </th>
             <th scope="col" className="px-1 py-3">
               <p>
-                {valueDolar.valueDolar === ""
+                {valueDolar.valueDolar === "" ||
+                valueDolar.valueDolar === undefined
                   ? ""
                   : dollar(valueDolar?.valueDolar)}{" "}
                 (Compra)
               </p>
-              <select
-                className="rounded-sm bg-blue-400"
-                name="valueDolar"
-                onChange={handleDollar}
-              >
-                <option value="">💵 DOLAR</option>
-                <option value="oficial">💵 OFICIAL 🟢</option>
-                <option value="mep">💰 MEP 🟣</option>
-                <option value="blue">💸 BLUE 🔵</option>
-              </select>
+              <label>
+                <select
+                  className="rounded-sm bg-blue-400"
+                  name="valueDolar"
+                  onChange={handleDollar}
+                >
+                  <option value="">💵 DOLAR</option>
+                  <option value="oficial">💵 OFICIAL 🟢</option>
+                  <option value="mep">💰 MEP 🟣</option>
+                  <option value="blue">💸 BLUE 🔵</option>
+                </select>
+              </label>
             </th>
             <th scope="col" className="text-center px-1 py-3">
               Ingresos
@@ -100,7 +103,7 @@ export const UserIncomes = () => {
             <th scope="col" className="text-center px-1 py-3">
               Editar
             </th>
-            <th scope="col" className="text-center px-1 py-3">
+            <th scope="col" className="rounded-tr-lg text-center px-1 py-3">
               Eliminar
             </th>
           </tr>
@@ -111,7 +114,7 @@ export const UserIncomes = () => {
             <tr key={user.id} className="bg-blue-500 border-b border-blue-400">
               <td
                 scope="row"
-                className="flex justify-center px-1 py-3 font-medium text-blue-50 whitespace-nowrap dark:text-blue-100"
+                className="flex justify-center px-1 py-3 font-medium text-white whitespace-nowrap"
               >
                 <img
                   className="rounded-full"
@@ -192,7 +195,7 @@ export const UserIncomes = () => {
         </tbody>
         <tfoot>
           <tr className="bg-blue-500 border-b border-blue-400">
-            <td className=" px-6 py-4 font-bold text-blue-50 whitespace-nowrap dark:text-blue-100">
+            <td className="rounded-bl-lg px-6 py-4 font-bold text-white whitespace-nowrap">
               TOTAL
             </td>
             <td className=" font-bold text-lg px-0 py-1"></td>
@@ -201,7 +204,7 @@ export const UserIncomes = () => {
             <td className=" font-bold text-lg px-0 py-1"></td>
             <td className=" font-bold text-lg px-0 py-1"></td>
             <td className=" font-bold text-lg px-0 py-1"></td>
-            <td className=" font-bold text-lg px-0 py-1">{`$ ${tot}`}</td>
+            <td className="rounded-br-lg font-bold text-lg px-0 py-1">{`$ ${tot}`}</td>
           </tr>
         </tfoot>
       </table>
@@ -211,7 +214,7 @@ export const UserIncomes = () => {
       <button
         type="button"
         onClick={() => setForm(!form)}
-        className="right-2 text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-normal rounded-[50%] text-2xl p px-2 pb-1 text-center m-1 mb-6"
+        className="right-2 text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-normal rounded-full text-2xl px-2 pb-1 text-center m-1 mb-10"
       >
         {form ? "×" : "+"}
       </button>

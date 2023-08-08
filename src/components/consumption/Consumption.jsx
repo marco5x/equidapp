@@ -14,9 +14,9 @@ export const Consumption = () => {
   const total = consumption.reduce((acc, val) => acc + val.price, 0);
 
   return (
-    <div className="flex flex-col py-1 md:py-6 sm:overflow-y-hidden">
-      <div className="relative overflow-x-auto shadow-sm sm:rounded-lg ">
-        <table className="w-9/12 text-sm text-blue-100 dark:text-blue-100">
+    <div className="flex flex-col py-1 md:py-6 sm:overflow-y-hidden md:overflow-x-hidden">
+      <div className="relative overflow-x-auto shadow-sm rounded-lg">
+        <table className="max-w-[80%] text-sm text-white">
           <thead className="text-xs text-white uppercase bg-blue-600 dark:text-white">
             <tr>
               <th scope="col" className="px-6 py-3">
@@ -41,7 +41,7 @@ export const Consumption = () => {
               >
                 <th
                   scope="row"
-                  className="px-6 py-3 font-medium text-blue-50 whitespace-nowrap dark:text-blue-100"
+                  className="px-6 py-3 font-medium text-white whitespace-nowrap"
                 >
                   {value.expense}
                 </th>
@@ -74,12 +74,12 @@ export const Consumption = () => {
           </tbody>
           <tfoot>
             <tr className="bg-blue-500 border-b border-blue-400">
-              <td className="uppercase px-6 py-4 font-bold text-blue-50 whitespace-nowrap dark:text-blue-100">
+              <td className="rounded-bl-lg uppercase px-6 py-4 font-bold text-white whitespace-nowrap">
                 total
               </td>
               <td className=" font-bold text-lg px-0 py-1"></td>
               <td className=" font-bold text-lg px-0 py-1"></td>
-              <td className=" font-bold text-lg px-0 py-1">{`$ ${total}`}</td>
+              <td className="rounded-br-lg font-bold text-lg px-0 py-1">{`$ ${total}`}</td>
             </tr>
           </tfoot>
         </table>
@@ -93,7 +93,7 @@ export const Consumption = () => {
         <button
           type="button"
           onClick={() => setForm(!form)}
-          className=" right-2 text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-normal rounded-[50%] text-2xl p px-2 pb-1 text-center m-1"
+          className=" right-2 text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-normal rounded-full text-2xl p px-2 pb-1 text-center m-1"
         >
           {form ? "×" : "+"}
         </button>
