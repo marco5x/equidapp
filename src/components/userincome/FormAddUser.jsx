@@ -15,6 +15,8 @@ export const FormUsers = ({ form, set }) => {
     let incomeDollar = parseInt(formData.get("dollar"));
     const userFound = users.map((us) => us.name === name);
 
+    if (isNaN(incomes) && isNaN(incomeDollar) && !name)
+      return alert("Debe ingresar al menos un campo");
     if (isNaN(incomes)) incomes = 0;
     if (isNaN(incomeDollar)) incomeDollar = 0;
     if (userFound[0] === true) {
@@ -32,7 +34,7 @@ export const FormUsers = ({ form, set }) => {
         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
         type="text"
         name="name"
-        placeholder="Usuario de github"
+        placeholder="Usuario de ✕ (Twitter) sin @"
       />
       <input
         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"

@@ -3,7 +3,7 @@ import equidapp from "../../assets/equidapp.webp";
 export const Header = () => {
   return (
     <div>
-      <div className="flex justify-center items-center py-5 gap-3 md:gap-9">
+      <div className="flex py-5 gap-3 md:gap-9">
         <img
           className="w-20 md:w-24"
           src={"/logo.webp"}

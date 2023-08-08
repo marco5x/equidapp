@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAppDispatch, useConsumptionSelector } from "../../redux/hooks";
 import { deleteConsumption } from "../../redux/features/consumption/consumptionSlice";
-import { FormAddConsumption } from "./FormAddComsumption";
+import { FormAddConsumption } from "./FormAddConsumption";
 import { FormEditConsumption } from "./FormEditConsumption";
 
 export const Consumption = () => {
@@ -14,9 +14,9 @@ export const Consumption = () => {
   const total = consumption.reduce((acc, val) => acc + val.price, 0);
 
   return (
-    <div className="flex flex-col ">
-      <div className="relative overflow-x-auto shadow-sm sm:rounded-lg">
-        <table className="w-9/12 text-sm text-left text-blue-100 dark:text-blue-100">
+    <div className="flex flex-col py-1 md:py-6 sm:overflow-y-hidden">
+      <div className="relative overflow-x-auto shadow-sm sm:rounded-lg ">
+        <table className="w-9/12 text-sm text-blue-100 dark:text-blue-100">
           <thead className="text-xs text-white uppercase bg-blue-600 dark:text-white">
             <tr>
               <th scope="col" className="px-6 py-3">
@@ -28,7 +28,7 @@ export const Consumption = () => {
               <th scope="col" className="text-center px-6 py-3">
                 Editar
               </th>
-              <th scope="col" className="uppercase text-center px-3 py-3">
+              <th scope="col" className="text-center px-3 py-3">
                 Eliminar
               </th>
             </tr>
