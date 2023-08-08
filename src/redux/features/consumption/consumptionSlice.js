@@ -1,9 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = [
-  { id: "1", expense: "Apple MacBook Pro 17", price: 1000 },
-  { id: "2", expense: "Microsoft Surface Pro", price: 1250 },
-];
+const initialState = [];
 
 export const consumptionSlice = createSlice({
   name: "consumption",
