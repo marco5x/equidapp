@@ -9,7 +9,7 @@ export const CounterLikes = () => {
         <WhatsappShareButton
           title="Mira esta grandiosa app!! "
           separator="👉🏻 "
-          url="https://equidap.netlify.com"
+          url="https://equidapp.netlify.com"
         >
           <WhatsappIcon size={32} round={true} />
         </WhatsappShareButton>

@@ -57,7 +57,7 @@ export const UserIncomes = () => {
     });
   };
 
-  if (err || error || errors) return "Error en datos del dólar";
+  // if (err || error || errors) return "Error en datos del dólar";
 
   return (
     <div className="relative overflow-y-auto shadow-sm md:overflow-x-hidden">
